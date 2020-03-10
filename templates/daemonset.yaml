@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "cw_insights.name" . }}
+  namespace: {{ include "cw_insights.namespace" . }}
+  labels: {{- include "cw_insights.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      name: {{ include "cw_insights.name" . }}
+  template:
+    metadata:
+      labels:
+        name: {{ include "cw_insights.name" . }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.image.repository }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.insights.ports }}
+          ports:
+            {{- range .Values.insights.ports }}
+            - containerPort: {{ .containerPort  }}
+              protocol: {{ .protocol | quote }}
+              hostPort: {{ .hostPort }}
+            {{- end}}
+          {{- end }}
+          {{- if .Values.resources }}
+          resources:
+            {{toYaml .Values.resources | indent 2}}
+          {{- end }}
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HOST_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: K8S_NAMESPACE
+              value: {{ include "cw_insights.namespace" . }}
+            - name: CI_VERSION
+              value: "k8s/1.1.0"
+          # Please don't change the mountPath
+          volumeMounts:
+            - name: cwagentconfig
+              mountPath: /etc/cwagentconfig
+            - name: rootfs
+              mountPath: /rootfs
+              readOnly: true
+            - name: dockersock
+              mountPath: /var/run/docker.sock
+              readOnly: true
+            - name: varlibdocker
+              mountPath: /var/lib/docker
+              readOnly: true
+            - name: sys
+              mountPath: /sys
+              readOnly: true
+            - name: devdisk
+              mountPath: /dev/disk
+              readOnly: true
+      volumes:
+        - name: cwagentconfig
+          configMap:
+            name: {{ include "cw_insights.name" . }}-cm
+        - name: rootfs
+          hostPath:
+            path: /
+        - name: dockersock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: varlibdocker
+          hostPath:
+            path: /var/lib/docker
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: devdisk
+          hostPath:
+            path: /dev/disk/
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriod }}
+      serviceAccountName: {{ include "cw_insights.serviceAccountName" .}}

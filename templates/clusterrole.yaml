@@ -1,0 +1,43 @@
+{{- if .Values.serviceAccount.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "cw_insights.serviceAccountName" . }}-role
+  labels: {{- include "cw_insights.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes", "endpoints", "namespaces", "configmaps"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes/proxy"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["nodes/stats", "configmaps", "events"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["cwagent-clusterleader"]
+    verbs: ["get","update"]
+{{- end }}
+---
+{{- if .Values.serviceAccount.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "cw_insights.serviceAccountName" . }}-role-bindings
+subjects:
+  - kind: ServiceAccount
+    namespace: {{ .Release.Namespace }}
+    name: {{ include "cw_insights.serviceAccountName" .}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "cw_insights.serviceAccountName" . }}-role
+{{- end }}

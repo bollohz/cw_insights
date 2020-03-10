@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "cw_insights.fullname" . }}-test-connection"
+  namespace: {{ include "cw_insights.namespace" . }}
+  labels:
+    {{- include "cw_insights.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "cw_insights.fullname" . }}:{{ (index .Values.insights.ports 0).containerPort }}']
+  restartPolicy: Never

@@ -1,0 +1,10 @@
+---
+#################################
+# Container--Insights Namespace #
+#################################
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cw-insights
+  labels:
+    name: cw-insights
