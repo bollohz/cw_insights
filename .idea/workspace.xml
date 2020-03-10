@@ -15,10 +15,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
   <component name="KonanWorkspace">
     <executables />
   </component>
   <component name="ProjectId" id="1YvyLe7GLjkJFSXGWsd3CSm8DL5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -53,7 +61,7 @@
       <option name="presentableId" value="Default" />
       <updated>1583837307716</updated>
       <workItem from="1583837310517" duration="8063000" />
-      <workItem from="1583846078677" duration="4952000" />
+      <workItem from="1583846078677" duration="5490000" />
     </task>
     <servers />
   </component>

@@ -4,9 +4,10 @@ description: A Helm Chart for AWS CloudWatch Container Insights
 
 type: application
 
-version: 0.0.1
+version: 0.1.0
 
 appVersion: 1.16.0
 
 maintainers:
   - name: Bollohz
+    email: federico.bollotta@gmail.com
