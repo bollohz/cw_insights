@@ -20,7 +20,7 @@ By default, the Container Insight Agent runs in a DaemonSet. It can alternativel
 
 ### Installing the Container Insight's Chart
 
-To install the chart with the release name `<RELEASE_NAME>`, retrieve your Datadog API key from your [Agent Installation Instructions](https://app.datadoghq.com/account/settings#agent/kubernetes) and run:
+To install the chart with the release name `<RELEASE_NAME>`, run:
 
 ```bash
 helm install --name <RELEASE_NAME> \
